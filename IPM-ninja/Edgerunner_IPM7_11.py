@@ -17,7 +17,7 @@ def convert_color(BGR):
     converted = cv2.cvtColor(BGR, cv2.COLOR_BGR2RGB)
     plt.imshow(converted)
 
-img = cv2.resize(cv2.imread("C:\\Users\\MBComputer\\Downloads\\powercar.png",0), (1000,1000))
+img = cv2.resize(cv2.imread("/Users/nopparuj/ZSM-00/IPM-ninja/powercar.png",0), (1000,1000))
 warnings.filterwarnings('ignore')
 
 # Required filters
@@ -45,9 +45,10 @@ def apply_filter(image,kernel):
 def edge_sharpening(input,kernel_filter):
     results = np.zeros((input.shape[0],input.shape[1]))
     post_laplace = apply_filter(input,kernel_filter)
-    post_laplace_padded = np.pad(post_laplace, pad_width =1, mode ='edge')
+    post_laplace_padded = np.multiply(np.pad(post_laplace, pad_width =1, mode ='edge'),1)
     for u in range (input.shape[0]):
         for v in range (input.shape[1]):
+            # Use sharpening factor = 1
             sharped = input[u][v] - post_laplace_padded[u][v]
             if (sharped < 0):
                 sharped = 0
@@ -63,8 +64,8 @@ def unsharp_masking(input,kernel_filter):
     for q in range(input.shape[0]):
         for r in range(input.shape[1]):
             pre_mask = input[q][r] - post_gaussian_padded[q][r]
-            #Use alpha = 1
-            mask[q][r] = np.multiply(pre_mask,1)
+            # Use weight factor = 2 to enhance visibility of the edges
+            mask[q][r] = np.multiply(pre_mask,2)
     
             final = input[q][r] + mask[q][r]
             if (final < 0):

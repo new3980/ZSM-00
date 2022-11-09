@@ -7,7 +7,7 @@ def convert_color(BGR):
     converted = cv2.cvtColor(BGR, cv2.COLOR_BGR2RGB)
     plt.imshow(converted)
 
-img = cv2.resize(cv2.imread("C:\\Users\\MBComputer\\Downloads\\zuto.png",0), (1000,1000))
+img = cv2.resize(cv2.imread("/Users/nopparuj/ZSM-00/IPM-ninja/zuto.png",0), (1000,1000))
 
 robin0 = np.multiply(np.array([[-1,0,1],[-2,0,2],[-1,0,1]]), (1/8))
 robin1 = np.multiply(np.array([[-2,-1,0],[-1,0,1],[0,1,2]]), (1/8))
@@ -69,4 +69,17 @@ plt.subplot(1,2,2)
 plt.title("Compass operator")
 convert_color(compass_res)
 plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
 

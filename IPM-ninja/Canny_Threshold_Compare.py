@@ -6,7 +6,7 @@ def convert_color(BGR):
     converted = cv2.cvtColor(BGR, cv2.COLOR_BGR2RGB)
     plt.imshow(converted)
 
-img = cv2.resize(cv2.imread("C:\\Users\\MBComputer\\Downloads\\powercat.png",0), (1000,1000))
+img = cv2.resize(cv2.imread("/Users/nopparuj/ZSM-00/IPM-ninja/powercat.png",0), (1000,1000))
 
 def plot_images(image1,image2,image3,image4):
     plt.figure(1)

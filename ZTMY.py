@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2 as cv
 
-input1 = cv.resize(cv.imread("C:\\Users\\MBComputer\\Downloads\\ZSMMM\\rebHD.jpg"), (600,600))
-input2 = cv.resize(cv.imread("C:\\Users\\MBComputer\\Downloads\\ZSMMM\\rika.png"), (600,600))
+input1 = cv.resize(cv.imread("/Users/nopparuj/ZSM-00/IPM-ninja/zuto.png"), (1000,1000))
+input2 = cv.resize(cv.imread("/Users/nopparuj/ZSM-00/IPM-ninja/zuto.png"), (1000,1000))
 gray1 = cv.cvtColor(input1, cv.COLOR_BGR2GRAY)
 gray2 = cv.cvtColor(input2, cv.COLOR_BGR2GRAY)
 
@@ -51,7 +51,7 @@ def get_edges(image, horizontal_ker, vertical_ker,weight):
       yaxis[i][j] = pre_vertical
 
       pre_output = np.sqrt(((np.power(xaxis[i][j],2)) +(np.power(yaxis[i][j],2))))
-      if (pre_output < 5):
+      if (pre_output < 50):
         pre_output = 0
       else:
         pre_output = 255
