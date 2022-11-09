@@ -9,7 +9,7 @@ def convert_color(BGR):
     plt.imshow(converted)
 
 #Hough line transform (OpenCV-based)
-img = cv2.resize(cv2.imread("C:\\Users\\MBComputer\\Downloads\\room.png",0), (1000,1000))
+img = cv2.resize(cv2.imread("/Users/nopparuj/ZSM-00/IPM-ninja/room.png",0), (1000,1000))
 
 
 def hough_linePdetect(image):
