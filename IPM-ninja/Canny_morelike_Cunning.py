@@ -67,84 +67,98 @@ def general_detect(input_img,xaxis,yaxis):
             #     pre_magnitude = 255
             magnitude[u][v] = pre_magnitude
 
-            theta[u][v] = np.degrees(np.arctan2(horizontal[u][v],vertical[u][v]))
+            theta[u][v] = np.degrees(np.arctan2(vertical[u][v],horizontal[u][v]))
+            if (theta[u][v] < 0):
+                theta[u][v] += 180
+
     return magnitude.astype(np.uint8), theta
 
 # Apply Non-Max-Suppression
-def local_maximum(magni,dir):
+def nonmax_suppress(magni,dir):
     pre_canny = np.zeros(magni.shape)
-    for i in range(dir.shape[0]-1):
-        for j in range(dir.shape[1]-1):
+    for i in range (dir.shape[0]-1):
+        for j in range (dir.shape[1]-1):
 
-            if ((dir[i][j] >= -22.5 and dir[i][j] <= 22.5) or (dir[i][j] <= -157.5 and dir[i][j] >= 157.5)):
-                if ((magni[i][j] > magni[i][j+1]) and (magni[i][j] > magni[i][j-1])):
+            if ((dir[i][j] < 22.5) or (dir[i][j] >= 157.5)):
+                if (magni[i][j-1] < magni[i][j] > magni[i][j+1]):
                     pre_canny[i][j] = magni[i][j]
                 else:
                     pre_canny[i][j] = 0
 
-            elif ((dir[i][j] >= 22.5 and dir[i][j] <= 67.5) or (dir[i][j] <= -112.5 and dir[i][j] >= -157.5)):
-                if ((magni[i][j] > magni[i+1][j+1]) and (magni[i][j] > magni[i-1][j-1])):
+            elif ((dir[i][j] >= 22.5) or (dir[i][j] < 67.5)):
+                if (magni[i-1][j-1] < magni[i][j] > magni[i+1][j+1]):
+                    pre_canny[i][j] = magni[i][j]
+                else:
+                    pre_canny[i][j] = 0
+            
+            elif ((dir[i][j] >= 67.55) or (dir[i][j] < 112.5)):
+                if (magni[i-1][j] < magni[i][j] > magni[i+1][j]):
                     pre_canny[i][j] = magni[i][j]
                 else:
                     pre_canny[i][j] = 0
 
-            elif ((dir[i][j] >= 67.5 and dir[i][j] <= 112.5) or (dir[i][j] <= -67.5 and dir[i][j] >= -112.5)):
-                if ((magni[i][j] > magni[i+1][j]) and (magni[i][j] > magni[i-1][j])):
+            elif ((dir[i][j] >= 112.5) or (dir[i][j] < 157.5)):
+                if ((magni[i-1][j+1] < magni[i][j] > magni[i+1][j-1])):
                     pre_canny[i][j] = magni[i][j]
                 else:
-                    pre_canny[i][j] = 0
+                    pre_canny[i][j] = 0 
 
-            elif ((dir[i][j] >= 112.5 and dir[i][j] <= 157.5) or (dir[i][j] <= -22.5 and dir[i][j] >= -67.5)):
-                if ((magni[i][j] > magni[i+1][j-1]) and (magni[i][j] > magni[i-1][j+1])):
-                    pre_canny[i][j] = magni[i][j]
-                else:
-                    pre_canny[i][j] = 0   
-    return pre_canny.astype(np.uint8)       
-
+    return pre_canny.astype(np.uint8)
+                
 # Bruh it broke, even I copied thresholding from other
 
-# def double_threshold(localmax,low_t,high_t):
+def double_threshold(localmax,low_t,high_t):
 
-#     thresholded = np.zeros((localmax.shape[0],localmax.shape[1]))
+    thresholded = np.zeros((localmax.shape[0],localmax.shape[1]))
 
-#     for u in range (localmax.shape[0]):
-#         for v in range (localmax.shape[1]):
-#             if (localmax[u][v] >= low_t) and (localmax[u][v] < high_t):
-#                 thresholded[u][v] = 75
-#             elif (localmax[u][v] < low_t):
-#                 thresholded[u][v] = 0
-#             elif (localmax[u][v] > high_t):
-#                 thresholded[u][v] = 255
-#     return thresholded.astype(np.uint8)
+    for u in range (localmax.shape[0]):
+        for v in range (localmax.shape[1]):
+            # change value that in the middle between low and high threshold to become constant
+            if (low_t <= localmax[u][v] < high_t):
+                thresholded[u][v] = 50 # weak edge
+            elif (localmax[u][v] < low_t):
+                thresholded[u][v] = 0
+            elif (localmax[u][v] > high_t):
+                thresholded[u][v] = 255 # strong edge
+    return thresholded.astype(np.uint8)
 
-# def hysteresis(img_thresholded):
-#     final = np.zeros(img_thresholded.shape)
-#     for i in range(0, img_thresholded.shape[0]):		
-#         for j in range(0, img_thresholded.shape[1]):
-#             val = img_thresholded[i,j]
-#             if val == 75:			
-#                 if img_thresholded[i-1,j] == 255 or img_thresholded[i+1,j] == 255 or img_thresholded[i-1,j-1] == 255 or img_thresholded[i+1,j-1] == 255 or img_thresholded[i-1,j+1] == 255 or img_thresholded[i+1,j+1] == 255 or img_thresholded[i,j-1] == 255 or img_thresholded[i,j+1] == 255:
-#                     final[i,j] = 255		
-#             elif val == 255:
-#                 final[i,j] = 255		
-#     return final.astype(np.uint8)
+def hysteresis(img_thresholded):
+    final = np.zeros(img_thresholded.shape)
 
+    for i in range(img_thresholded.shape[0]):		
+        for j in range(img_thresholded.shape[1]):
+            check = img_thresholded[i][j]
 
+            #check is this pixel is connected to 'strong' edges or not
+            if check == 50:			
+                if ((img_thresholded[i-1][j] == 255) or (img_thresholded[i+1][j] == 255)
+                    or (img_thresholded[i-1][j+1] == 255) or (img_thresholded[i+1][j+1] == 255)
+                    or (img_thresholded[i+1][j-1] == 255) or (img_thresholded[i-1][j-1] == 255)
+                    or (img_thresholded[i][j+1] == 255) or (img_thresholded[i][j-1] == 255)):
 
+                    final[i][j] = 255		
 
-check1, direction = general_detect(img,sobel_x,sobel_y)
-check2 = direction.astype(np.uint8)
-ans = local_maximum(check1,direction)
-# ans2 = double_threshold(ans,3,10)
-# fin = hysteresis(ans2)
+            elif check == 255:
+                final[i][j] = 255
 
-# plt.subplot(121),plt.imshow(check1,cmap='gray')
-# plt.title('After Sobel filter')
-# plt.xticks([])
-# plt.yticks([])
-# plt.subplot(122),
-plt.imshow(ans,cmap='gray')
-plt.title('After NMS')
+            else:
+                final[i][j] = 0		
+
+    return final.astype(np.uint8)
+
+sobel_res, direction = general_detect(img,sobel_x,sobel_y)
+local_maximum = nonmax_suppress(sobel_res,direction)
+double_thresholded = double_threshold(local_maximum,1,5)
+canny = hysteresis(double_thresholded)
+
+plt.subplot(121),plt.imshow(sobel_res,cmap='gray')
+plt.title('After Sobel filter')
 plt.xticks([])
 plt.yticks([])
+plt.subplot(122)
+plt.imshow(canny,cmap='gray')
+plt.title('Canny performed')
+plt.xticks([])
+plt.yticks([])
+
 plt.show()

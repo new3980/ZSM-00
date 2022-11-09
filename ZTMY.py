@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2 as cv
 
-input1 = cv.resize(cv.imread("C:\\Users\\MBComputer\\Downloads\\ZSMMM\\rebHD.jpg"), (600,600))
+input1 = cv.resize(cv.imread("C:\\Users\\MBComputer\\Downloads\\powercat.png"), (1000,1000))
 input2 = cv.resize(cv.imread("C:\\Users\\MBComputer\\Downloads\\ZSMMM\\rika.png"), (600,600))
 gray1 = cv.cvtColor(input1, cv.COLOR_BGR2GRAY)
 gray2 = cv.cvtColor(input2, cv.COLOR_BGR2GRAY)
