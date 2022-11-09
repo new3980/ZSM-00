@@ -44,8 +44,10 @@ def apply_filter(image,kernel):
 # Edge sharpening function with edge padding
 def edge_sharpening(input,kernel_filter):
     results = np.zeros((input.shape[0],input.shape[1]))
+    weighted = np.zeros((input.shape[0],input.shape[1]))
     post_laplace = apply_filter(input,kernel_filter)
-    post_laplace_padded = np.pad(post_laplace, pad_width =1, mode ='edge')
+    # fraction = 1
+    post_laplace_padded = np.multiply(np.pad(post_laplace, pad_width =1, mode ='edge'),5)
     for u in range (input.shape[0]):
         for v in range (input.shape[1]):
             sharped = input[u][v] - post_laplace_padded[u][v]
@@ -63,8 +65,8 @@ def unsharp_masking(input,kernel_filter):
     for q in range(input.shape[0]):
         for r in range(input.shape[1]):
             pre_mask = input[q][r] - post_gaussian_padded[q][r]
-            #Use alpha = 1
-            mask[q][r] = np.multiply(pre_mask,1)
+            #Use weight factor = 2 to enhance edges
+            mask[q][r] = np.multiply(pre_mask,2)
     
             final = input[q][r] + mask[q][r]
             if (final < 0):

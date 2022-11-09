@@ -25,15 +25,13 @@ def plot_images(image1,image2,image3,image4):
     plt.show()
 
 
-
-def apply_canny(image,t_upper,t_lower):
-    canny_edges = cv2.Canny(image,t_upper,t_lower)
+def apply_canny(image,t_lower,t_upper):
+    canny_edges = cv2.Canny(image,t_lower,t_upper)
     return canny_edges.astype(np.uint8)
 
 result1 = apply_canny(img,50,150)
 result2 = apply_canny(img,10,50)
 result3 = apply_canny(img,150,200)
+hist2 = cv2.calcHist([result1], [0], None, [256], [0, 256])
 
 plot_images(img,result1,result2,result3)
-
-
