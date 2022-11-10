@@ -10,7 +10,7 @@ def convert_color(BGR):
     plt.imshow(converted)
 
 # Load image in grayscale
-img = cv2.resize(cv2.imread("C:\\Users\\MBComputer\\Downloads\\powercat.png",0), (1000,1000))
+img = cv2.resize(cv2.imread("/Users/nopparuj/ZSM-00/IPM-ninja/powercat.png",0), (1000,1000))
 
 # Needed filter
 gaussian = np.multiply(np.array([[1,2,1],[2,4,2],[1,2,1]]), (1/16))
@@ -151,12 +151,14 @@ local_maximum = nonmax_suppress(sobel_res,direction)
 double_thresholded = double_threshold(local_maximum,1,5)
 canny = hysteresis(double_thresholded)
 
-plt.subplot(121),plt.imshow(sobel_res,cmap='gray')
+plt.figure(1)
+plt.subplot(121)
+convert_color(sobel_res)
 plt.title('After Sobel filter')
 plt.xticks([])
 plt.yticks([])
 plt.subplot(122)
-plt.imshow(canny,cmap='gray')
+convert_color(canny)
 plt.title('Canny performed')
 plt.xticks([])
 plt.yticks([])
