@@ -6,7 +6,7 @@ def convert_color(BGR):
     converted = cv2.cvtColor(BGR, cv2.COLOR_BGR2RGB)
     plt.imshow(converted)
 
-img = cv2.resize(cv2.imread("/Users/nopparuj/ZSM-00/IPM-ninja/powercat.png",0), (1000,1000))
+img = cv2.resize(cv2.imread("D:\\GIT\\ZSM-00\\IPM-ninja\\yae_sticker.jpg",0), (500,500))
 
 def plot_images(image1,image2,image3,image4):
     plt.figure(1)
@@ -35,3 +35,4 @@ result3 = apply_canny(img,150,200)
 hist2 = cv2.calcHist([result1], [0], None, [256], [0, 256])
 
 plot_images(img,result1,result2,result3)
+cv2.imwrite('D:\\GIT\\ZSM-00\\IPM-ninja\\yae.png',result1)
