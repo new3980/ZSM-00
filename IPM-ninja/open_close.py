@@ -2,11 +2,6 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 
-# Convert BGR to RGB for matplotlib functions
-def convert_color(BGR):
-    converted = cv2.cvtColor(BGR, cv2.COLOR_BGR2RGB)
-    plt.imshow(converted)
-
 img = cv2.resize(cv2.imread("D:\\GIT\\ZSM-00\\IPM-ninja\\crystal.png",0), (850,850))
 _,img = cv2.threshold(img,50,255,cv2.THRESH_BINARY)
 
@@ -53,13 +48,15 @@ def dilation(image,window):
 dilated = dilation(img,ones)
 eroded = erosion(img,ones)
 
-opening = erosion(dilation(img,ones),ones)
-closing = dilation(erosion(img,ones),ones)
+opening = dilation(erosion(img,ones),ones)
+closing = erosion(dilation(img,ones),ones)
 
 #Using OpenCV
 kernel = np.ones((3, 3), np.uint8)
 cvdilate = cv2.dilate(img,kernel)
 cverode = cv2.erode(img,kernel)
+cvopen = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
+cvclose = cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
 
 plt.figure(1)
 plt.subplot(1,3,1)
@@ -90,5 +87,13 @@ plt.imshow(opening, cmap='gray')
 plt.subplot(1,2,2)
 plt.title("Closing")
 plt.imshow(closing, cmap='gray')
+
+plt.figure(4)
+plt.subplot(1,2,1)
+plt.title("Opening")
+plt.imshow(cvopen, cmap='gray')
+plt.subplot(1,2,2)
+plt.title("Closing")
+plt.imshow(cvclose, cmap='gray')
 
 plt.show()
